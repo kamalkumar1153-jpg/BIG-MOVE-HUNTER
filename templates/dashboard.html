@@ -56,7 +56,7 @@ margin: auto;
 padding: 14px;
 display: grid;
 gap: 16px;
-grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
 }
 .card {
 background: var(--card);
@@ -68,26 +68,35 @@ flex-direction: column;
 gap: 12px;
 }
 .card-title {
-font-size: 14px;
+font-size: 12px;
 font-weight: 600;
 color: var(--muted);
 text-transform: uppercase;
 letter-spacing: 0.5px;
 }
 .value {
-font-size: 24px;
+font-size: 22px;
 font-weight: 700;
 color: var(--text);
 }
 .green { color: var(--green); }
-.red { color: var(--red); }
 .gold { color: var(--gold); }
-#chart {
+#chart-box {
 width: 100%;
 height: 380px;
+position: relative;
+background: #111a2b;
 border-radius: 8px;
 overflow: hidden;
-position: relative;
+}
+#chart {
+width: 100%;
+height: 100%;
+}
+canvas {
+display: block;
+width: 100%;
+height: 100%;
 }
 </style>
 </head>
@@ -111,43 +120,100 @@ position: relative;
 <div class="muted">Monitoring Breakouts & Volume Spikes</div>
 </div>
 ​<div class="card" style="grid-column: 1 / -1;">
-<div class="card-title">Live Trend Chart</div>
+<div class="card-title">Live Trend Chart (NIFTY / CRYPTO)</div>
+<div id="chart-box">
 <div id="chart"></div>
 </div>
 </div>
+</div>
 ​<script>
-function initChart() {
+const sampleData = [
+{ time: '10:00', open: 175.2, high: 178.0, low: 174.5, close: 177.8 },
+{ time: '10:05', open: 177.8, high: 180.1, low: 176.9, close: 179.4 },
+{ time: '10:10', open: 179.4, high: 181.5, low: 178.2, close: 180.5 },
+{ time: '10:15', open: 180.5, high: 182.0, low: 179.2, close: 181.8 },
+{ time: '10:20', open: 181.8, high: 184.5, low: 181.0, close: 183.9 },
+{ time: '10:25', open: 183.9, high: 185.2, low: 182.8, close: 184.1 },
+{ time: '10:30', open: 184.1, high: 188.0, low: 183.5, close: 187.5 },
+{ time: '10:35', open: 187.5, high: 191.2, low: 187.0, close: 190.8 },
+{ time: '10:40', open: 190.8, high: 195.0, low: 189.5, close: 194.2 }
+];
+​function drawFallbackCanvas(container) {
+container.innerHTML = '';
+const canvas = document.createElement('canvas');
+container.appendChild(canvas);
+​const dpr = window.devicePixelRatio || 1;
+const rect = container.getBoundingClientRect();
+canvas.width = rect.width * dpr;
+canvas.height = rect.height * dpr;
+​const ctx = canvas.getContext('2d');
+ctx.scale(dpr, dpr);
+​const width = rect.width;
+const height = rect.height;
+const padding = 30;
+​ctx.fillStyle = '#111a2b';
+ctx.fillRect(0, 0, width, height);
+​let minP = Infinity, maxP = -Infinity;
+sampleData.forEach(d => {
+if (d.low < minP) minP = d.low;
+if (d.high > maxP) maxP = d.high;
+});
+​const range = (maxP - minP) || 1;
+const step = (width - padding * 2) / sampleData.length;
+​// Draw Grid
+ctx.strokeStyle = '#1d2a40';
+ctx.lineWidth = 1;
+for (let i = 1; i <= 4; i++) {
+let y = (height / 5) * i;
+ctx.beginPath();
+ctx.moveTo(0, y);
+ctx.lineTo(width, y);
+ctx.stroke();
+}
+​// Draw Candles
+sampleData.forEach((d, i) => {
+const x = padding + i * step + step / 2;
+const getY = price => height - padding - ((price - minP) / range) * (height - padding * 2);
+​const openY = getY(d.open);
+const closeY = getY(d.close);
+const highY = getY(d.high);
+const lowY = getY(d.low);
+​const isUp = d.close >= d.open;
+const color = isUp ? '#28dba0' : '#ff647c';
+​// Wick
+ctx.strokeStyle = color;
+ctx.lineWidth = 1.5;
+ctx.beginPath();
+ctx.moveTo(x, highY);
+ctx.lineTo(x, lowY);
+ctx.stroke();
+​// Body
+ctx.fillStyle = color;
+const bodyTop = Math.min(openY, closeY);
+const bodyHeight = Math.max(Math.abs(closeY - openY), 3);
+const bodyWidth = Math.max(step * 0.5, 6);
+ctx.fillRect(x - bodyWidth / 2, bodyTop, bodyWidth, bodyHeight);
+});
+}
+​function init() {
 const container = document.getElementById('chart');
 if (!container) return;
-​if (typeof LightweightCharts === 'undefined') {
-setTimeout(initChart, 500);
-return;
-}
-​const chart = LightweightCharts.createChart(container, {
-width: container.clientWidth,
+​if (typeof LightweightCharts !== 'undefined') {
+try {
+container.innerHTML = '';
+const chart = LightweightCharts.createChart(container, {
+width: container.clientWidth || 300,
 height: 380,
-layout: {
-background: { type: 'solid', color: '#111a2b' },
-textColor: '#91a2bd',
-},
-grid: {
-vertLines: { color: '#1d2a40' },
-horzLines: { color: '#1d2a40' },
-},
-timeScale: {
-timeVisible: true,
-secondsVisible: false,
-},
+layout: { background: { type: 'solid', color: '#111a2b' }, textColor: '#91a2bd' },
+grid: { vertLines: { color: '#1d2a40' }, horzLines: { color: '#1d2a40' } },
+timeScale: { timeVisible: true }
 });
-​const candleSeries = chart.addCandlestickSeries({
-upColor: '#28dba0',
-downColor: '#ff647c',
-borderDownColor: '#ff647c',
-borderUpColor: '#28dba0',
-wickDownColor: '#ff647c',
-wickUpColor: '#28dba0',
+const candleSeries = chart.addCandlestickSeries({
+upColor: '#28dba0', downColor: '#ff647c',
+borderDownColor: '#ff647c', borderUpColor: '#28dba0',
+wickDownColor: '#ff647c', wickUpColor: '#28dba0'
 });
-​const data = [
+candleSeries.setData([
 { time: '2026-10-20', open: 175.20, high: 178.00, low: 174.50, close: 177.80 },
 { time: '2026-10-21', open: 177.80, high: 180.10, low: 176.90, close: 179.40 },
 { time: '2026-10-22', open: 179.40, high: 181.50, low: 178.20, close: 180.50 },
@@ -156,16 +222,19 @@ wickUpColor: '#28dba0',
 { time: '2026-10-25', open: 183.90, high: 185.20, low: 182.80, close: 184.10 },
 { time: '2026-10-26', open: 184.10, high: 188.00, low: 183.50, close: 187.50 },
 { time: '2026-10-27', open: 187.50, high: 191.20, low: 187.00, close: 190.80 },
-{ time: '2026-10-28', open: 190.80, high: 195.00, low: 189.50, close: 194.20 },
-];
-​candleSeries.setData(data);
+{ time: '2026-10-28', open: 190.80, high: 195.00, low: 189.50, close: 194.20 }
+]);
 chart.timeScale().fitContent();
-​window.addEventListener('resize', () => {
-chart.applyOptions({ width: container.clientWidth });
-});
+return;
+} catch (e) {
+console.warn("Falling back to HTML5 Canvas Chart", e);
 }
-​document.addEventListener('DOMContentLoaded', initChart);
-window.addEventListener('load', initChart);
+}
+drawFallbackCanvas(container);
+}
+​window.addEventListener('DOMContentLoaded', init);
+window.addEventListener('load', init);
+window.addEventListener('resize', init);
 </script>
 </body>
 </html>
