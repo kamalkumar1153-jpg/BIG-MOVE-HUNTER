@@ -1,9 +1,155 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>BIG MOVE HUNTER | Live Trading Dashboard</title>
 <script src="https://unpkg.com/lightweight-charts@4.2.2/dist/lightweight-charts.standalone.production.js"></script>
 <style>
-:root{color-scheme:dark;--bg:#080d18;--card:#111a2b;--border:#24324a;--muted:#91a2bd;--text:#edf4ff;--green:#28dba0;--red:#ff647c;--blue:#62a7ff;--gold:#ffca70}
-*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#14213a 0,#080d18 48%);font:14px system-ui,-apple-system,Segoe UI,sans-serif;color:var(--text)}header{position:sticky;top:0;z-index:4;background:#080d18eF;border-bottom:1px solid var(--border);padding:14px 16px;display:flex;justify-content:space-between;align-items:center;gap:10px;backdrop-filter:blur(14px)}h1{font-size:17px;margin:0;letter-spacing:.7px}small,.muted{color:var(--muted)}.pill{border:1px solid #1f7a61;background:#10382f;color:#8df5d2;border-radius:999px;padding:5px 9px;font-size:11px}.wrap{max-width:1400px;margin:auto;padding:14px;display:grid;gap:
+:root {
+color-scheme: dark;
+--bg: #080d18;
+--card: #111a2b;
+--border: #24324a;
+--muted: #91a2bd;
+--text: #edf4ff;
+--green: #28dba0;
+--red: #ff647c;
+--blue: #62a7ff;
+--gold: #ffca70;
+}
+* { box-sizing: border-box; }
+body {
+margin: 0;
+background: radial-gradient(ellipse at top, #14213a 0%, #080d18 48%);
+font-family: system-ui, -apple-system, Segoe UI, sans-serif;
+font-size: 14px;
+color: var(--text);
+min-height: 100vh;
+}
+header {
+position: sticky;
+top: 0;
+z-index: 4;
+background: rgba(8, 13, 24, 0.9);
+border-bottom: 1px solid var(--border);
+padding: 14px 16px;
+display: flex;
+justify-content: space-between;
+align-items: center;
+gap: 10px;
+backdrop-filter: blur(14px);
+}
+h1 { font-size: 17px; margin: 0; letter-spacing: 0.7px; }
+small, .muted { color: var(--muted); }
+.pill {
+border: 1px solid #1f7a61;
+background: #10382f;
+color: #8df5d2;
+border-radius: 999px;
+padding: 5px 9px;
+font-size: 11px;
+}
+.wrap {
+max-width: 1400px;
+margin: auto;
+padding: 14px;
+display: grid;
+gap: 16px;
+grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+.card {
+background: var(--card);
+border: 1px solid var(--border);
+border-radius: 12px;
+padding: 16px;
+display: flex;
+flex-direction: column;
+gap: 12px;
+}
+.card-title {
+font-size: 14px;
+font-weight: 600;
+color: var(--muted);
+text-transform: uppercase;
+letter-spacing: 0.5px;
+}
+.value {
+font-size: 24px;
+font-weight: 700;
+color: var(--text);
+}
+.green { color: var(--green); }
+.red { color: var(--red); }
+#chart {
+width: 100%;
+height: 350px;
+border-radius: 8px;
+overflow: hidden;
+}
+</style>
+</head>
+<body>
+<header>
+<div>
+<h1>BIG MOVE HUNTER</h1>
+<small>Live Trading & Signal Dashboard</small>
+</div>
+<span class="pill">● LIVE ENGINE</span>
+</header>
+​<div class="wrap">
+<div class="card">
+<div class="card-title">Market Status</div>
+<div class="value green">ACTIVE / BULLISH</div>
+<div class="muted">Scanning top high-volume tickers</div>
+</div>
+​<div class="card">
+<div class="card-title">Big Move Signal</div>
+<div class="value gold">HUNTER READY</div>
+<div class="muted">Monitoring Breakouts & Volume Spikes</div>
+</div>
+​<div class="card" style="grid-column: 1 / -1;">
+<div class="card-title">Live Trend Chart</div>
+<div id="chart"></div>
+</div>
+</div>
+​<script>
+// Initialize Lightweight Chart
+const chartContainer = document.getElementById('chart');
+const chart = LightweightCharts.createChart(chartContainer, {
+layout: {
+backgroundColor: '#111a2b',
+textColor: '#91a2bd',
+},
+grid: {
+vertLines: { color: '#24324a' },
+horzLines: { color: '#24324a' },
+},
+timeScale: {
+timeVisible: true,
+secondsVisible: false,
+},
+});
+​const candleSeries = chart.addCandlestickSeries({
+upColor: '#28dba0',
+downColor: '#ff647c',
+borderDownColor: '#ff647c',
+borderUpColor: '#28dba0',
+wickDownColor: '#ff647c',
+wickUpColor: '#28dba0',
+});
+​// Sample Data
+const data = [
+{ time: '2026-10-24', open: 180.50, high: 182.00, low: 179.20, close: 181.80 },
+{ time: '2026-10-25', open: 181.80, high: 184.50, low: 181.00, close: 183.90 },
+{ time: '2026-10-26', open: 183.90, high: 185.20, low: 182.80, close: 184.10 },
+{ time: '2026-10-27', open: 184.10, high: 188.00, low: 183.50, close: 187.50 },
+{ time: '2026-10-28', open: 187.50, high: 191.20, low: 187.00, close: 190.80 },
+];
+​candleSeries.setData(data);
+​window.addEventListener('resize', () => {
+chart.resize(chartContainer.clientWidth, chartContainer.clientHeight);
+});
+</script>
+</body>
+</html>
