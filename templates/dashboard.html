@@ -4,10 +4,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BIG MOVE HUNTER | Live Dashboard</title>
+  <title>BIG MOVE HUNTER | Live Scanner & Option Chain</title>
   <style>
     :root {
-      --bg-dark: #0b111e;
+      --bg-dark: #080d18;
       --card-bg: #111a2b;
       --border-color: #1d2a40;
       --accent-green: #28dba0;
@@ -26,7 +26,7 @@
     }
 
     body {
-      background-color: var(--bg-dark);
+      background: radial-gradient(ellipse at top, #14213a 0%, #080d18 50%);
       color: var(--text-main);
       padding: 12px;
       min-height: 100vh;
@@ -36,16 +36,17 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 12px 16px;
-      background: var(--card-bg);
+      padding: 14px 16px;
+      background: rgba(17, 26, 43, 0.9);
       border: 1px solid var(--border-color);
       border-radius: 12px;
       margin-bottom: 12px;
+      backdrop-filter: blur(10px);
     }
 
     .logo-title {
       font-size: 16px;
-      font-weight: 700;
+      font-weight: 800;
       letter-spacing: 0.5px;
       color: var(--text-main);
     }
@@ -57,10 +58,10 @@
       background: rgba(40, 219, 160, 0.15);
       color: var(--accent-green);
       border: 1px solid rgba(40, 219, 160, 0.3);
-      padding: 4px 10px;
+      padding: 5px 12px;
       border-radius: 20px;
       font-size: 11px;
-      font-weight: 600;
+      font-weight: 700;
     }
 
     .dot {
@@ -78,7 +79,7 @@
 
     .grid-container {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
       gap: 12px;
       margin-bottom: 12px;
     }
@@ -101,12 +102,10 @@
     .card-value {
       font-size: 18px;
       font-weight: 700;
-      color: var(--accent-green);
     }
 
     .card-subtitle {
       font-size: 11px;
-      color: var(--text-muted);
       margin-top: 4px;
     }
 
@@ -127,11 +126,10 @@
 
     .chart-container {
       width: 100%;
-      height: 320px;
+      height: 300px;
       position: relative;
     }
 
-    /* Option Chain Table Styling */
     .option-chain-card {
       background: var(--card-bg);
       border: 1px solid var(--border-color);
@@ -153,6 +151,7 @@
       border-collapse: collapse;
       font-size: 11px;
       text-align: center;
+      min-width: 500px;
     }
 
     table.oc-table th {
@@ -170,7 +169,7 @@
     }
 
     .strike-cell {
-      background: rgba(98, 167, 255, 0.1);
+      background: rgba(98, 167, 255, 0.12);
       font-weight: 700;
       color: var(--accent-gold);
     }
@@ -185,7 +184,7 @@
 
     .atm-row {
       border: 1px solid var(--accent-gold) !important;
-      background: rgba(255, 202, 112, 0.08) !important;
+      background: rgba(255, 202, 112, 0.12) !important;
     }
 
     .signals-list {
@@ -201,7 +200,7 @@
       background: rgba(255, 255, 255, 0.02);
       padding: 10px 14px;
       border-radius: 8px;
-      border-left: 3px solid var(--accent-green);
+      border-left: 4px solid var(--accent-green);
     }
 
     .signal-item.sell {
@@ -214,7 +213,7 @@
   <header>
     <div>
       <div class="logo-title">BIG MOVE HUNTER</div>
-      <div style="font-size: 11px; color: var(--text-muted);">Live Scanner & Option Chain</div>
+      <div style="font-size: 11px; color: var(--text-muted);">Live Market Scanner & Option Chain</div>
     </div>
     <div class="badge-live">
       <span class="dot"></span>
@@ -222,27 +221,27 @@
     </div>
   </header>
 
-  <!-- Live Indices Grid -->
+  <!-- Indices Grid -->
   <div class="grid-container">
     <div class="card">
       <div class="card-title">NIFTY 50</div>
-      <div class="card-value" style="color: var(--accent-green);">24,380.50</div>
-      <div class="card-subtitle" style="color: var(--accent-green);">+142.30 (+0.59%)</div>
+      <div class="card-value" style="color: var(--accent-red);">22,698.85</div>
+      <div class="card-subtitle" style="color: var(--accent-red);">-50.90 (-0.22%)</div>
     </div>
     <div class="card">
       <div class="card-title">SENSEX</div>
-      <div class="card-value" style="color: var(--accent-green);">80,115.20</div>
-      <div class="card-subtitle" style="color: var(--accent-green);">+420.80 (+0.53%)</div>
+      <div class="card-value" style="color: var(--accent-red);">73,246.03</div>
+      <div class="card-subtitle" style="color: var(--accent-red);">-352.64 (-0.48%)</div>
+    </div>
+    <div class="card">
+      <div class="card-title">BANK NIFTY</div>
+      <div class="card-value" style="color: var(--accent-green);">54,267.40</div>
+      <div class="card-subtitle" style="color: var(--accent-green);">+292.50 (+0.54%)</div>
     </div>
     <div class="card">
       <div class="card-title">HUNTER SIGNAL</div>
       <div class="card-value" style="color: var(--accent-gold);">HUNTER READY</div>
-      <div class="card-subtitle">Breakout Alert Enabled</div>
-    </div>
-    <div class="card">
-      <div class="card-title">PCR (PUT/CALL)</div>
-      <div class="card-value" style="color: var(--accent-blue);">1.18</div>
-      <div class="card-subtitle" style="color: var(--accent-green);">Mildly Bullish</div>
+      <div class="card-subtitle" style="color: var(--text-muted);">Scanning Breakouts</div>
     </div>
   </div>
 
@@ -259,7 +258,7 @@
   <div class="option-chain-card">
     <div class="oc-header">
       <div class="card-title" style="margin: 0;">NIFTY LIVE OPTION CHAIN</div>
-      <div style="font-size: 11px; color: var(--accent-gold);">Expiry: Near Week</div>
+      <div style="font-size: 11px; color: var(--accent-gold);">ATM: 22,700 | PCR: 1.12</div>
     </div>
     <table class="oc-table">
       <thead>
@@ -282,59 +281,59 @@
       </thead>
       <tbody>
         <tr class="ce-bg">
-          <td>112.4</td>
-          <td>45.2k</td>
-          <td style="color: var(--accent-green);">+35.0</td>
-          <td style="border-right: 1px solid var(--border-color); font-weight: bold;">₹245.0</td>
-          <td class="strike-cell">24200</td>
-          <td style="border-left: 1px solid var(--border-color); font-weight: bold;">₹65.2</td>
-          <td style="color: var(--accent-red);">-18.4</td>
-          <td>12.8k</td>
-          <td>28.5</td>
+          <td>124.5</td>
+          <td>88.2k</td>
+          <td style="color: var(--accent-green);">+32.1</td>
+          <td style="border-right: 1px solid var(--border-color); font-weight: bold;">₹215.0</td>
+          <td class="strike-cell">22600</td>
+          <td style="border-left: 1px solid var(--border-color); font-weight: bold;">₹48.2</td>
+          <td style="color: var(--accent-red);">-14.5</td>
+          <td>18.4k</td>
+          <td>31.0</td>
         </tr>
         <tr class="ce-bg">
           <td>98.1</td>
-          <td>52.1k</td>
-          <td style="color: var(--accent-green);">+28.4</td>
-          <td style="border-right: 1px solid var(--border-color); font-weight: bold;">₹202.5</td>
-          <td class="strike-cell">24250</td>
-          <td style="border-left: 1px solid var(--border-color); font-weight: bold;">₹88.0</td>
-          <td style="color: var(--accent-red);">-22.1</td>
-          <td>21.3k</td>
-          <td>41.2</td>
+          <td>105.4k</td>
+          <td style="color: var(--accent-green);">+21.4</td>
+          <td style="border-right: 1px solid var(--border-color); font-weight: bold;">₹162.8</td>
+          <td class="strike-cell">22650</td>
+          <td style="border-left: 1px solid var(--border-color); font-weight: bold;">₹72.0</td>
+          <td style="color: var(--accent-red);">-18.2</td>
+          <td>35.1k</td>
+          <td>52.4</td>
         </tr>
         <tr class="atm-row">
-          <td>85.6</td>
-          <td>110.5k</td>
-          <td style="color: var(--accent-green);">+22.1</td>
-          <td style="border-right: 1px solid var(--border-color); font-weight: bold; color: var(--accent-green);">₹162.0</td>
-          <td class="strike-cell" style="background: var(--accent-gold); color: #000;">24300 (ATM)</td>
-          <td style="border-left: 1px solid var(--border-color); font-weight: bold; color: var(--accent-red);">₹118.5</td>
-          <td style="color: var(--accent-red);">-25.6</td>
-          <td>88.9k</td>
-          <td>92.4</td>
+          <td>110.2</td>
+          <td>210.8k</td>
+          <td style="color: var(--accent-green);">+12.5</td>
+          <td style="border-right: 1px solid var(--border-color); font-weight: bold; color: var(--accent-green);">₹118.5</td>
+          <td class="strike-cell" style="background: var(--accent-gold); color: #000;">22700 (ATM)</td>
+          <td style="border-left: 1px solid var(--border-color); font-weight: bold; color: var(--accent-red);">₹105.2</td>
+          <td style="color: var(--accent-red);">-22.4</td>
+          <td>190.5k</td>
+          <td>115.8</td>
         </tr>
         <tr class="pe-bg">
-          <td>45.2</td>
-          <td>68.4k</td>
-          <td style="color: var(--accent-green);">+14.5</td>
-          <td style="border-right: 1px solid var(--border-color); font-weight: bold;">₹126.8</td>
-          <td class="strike-cell">24350</td>
-          <td style="border-left: 1px solid var(--border-color); font-weight: bold;">₹154.0</td>
-          <td style="color: var(--accent-red);">-31.0</td>
-          <td>42.1k</td>
-          <td>65.8</td>
+          <td>65.4</td>
+          <td>95.1k</td>
+          <td style="color: var(--accent-red);">-8.5</td>
+          <td style="border-right: 1px solid var(--border-color); font-weight: bold;">₹82.4</td>
+          <td class="strike-cell">22750</td>
+          <td style="border-left: 1px solid var(--border-color); font-weight: bold;">₹148.0</td>
+          <td style="color: var(--accent-green);">+15.2</td>
+          <td>88.2k</td>
+          <td>82.1</td>
         </tr>
         <tr class="pe-bg">
-          <td>22.8</td>
-          <td>31.0k</td>
-          <td style="color: var(--accent-green);">+8.2</td>
-          <td style="border-right: 1px solid var(--border-color); font-weight: bold;">₹95.4</td>
-          <td class="strike-cell">24400</td>
-          <td style="border-left: 1px solid var(--border-color); font-weight: bold;">₹198.2</td>
-          <td style="color: var(--accent-red);">-38.5</td>
-          <td>18.5k</td>
-          <td>51.0</td>
+          <td>42.1</td>
+          <td>48.0k</td>
+          <td style="color: var(--accent-red);">-18.2</td>
+          <td style="border-right: 1px solid var(--border-color); font-weight: bold;">₹54.0</td>
+          <td class="strike-cell">22800</td>
+          <td style="border-left: 1px solid var(--border-color); font-weight: bold;">₹198.5</td>
+          <td style="color: var(--accent-green);">+28.4</td>
+          <td>45.0k</td>
+          <td>98.5</td>
         </tr>
       </tbody>
     </table>
@@ -346,43 +345,46 @@
     <div class="signals-list">
       <div class="signal-item">
         <div>
-          <strong style="color: var(--text-main);">NIFTY 24300 CE</strong>
-          <div style="font-size: 11px; color: var(--text-muted);">Volume Spike Breakout @ 10:40 AM</div>
+          <strong style="color: var(--text-main);">NIFTY 22700 CE</strong>
+          <div style="font-size: 11px; color: var(--text-muted);">Volume Spike Breakout Detected</div>
         </div>
-        <span style="color: var(--accent-green); font-weight: bold; font-size: 13px;">+18.5% MOVE</span>
+        <span style="color: var(--accent-green); font-weight: bold; font-size: 13px;">+22.5% MOVE</span>
       </div>
       <div class="signal-item sell">
         <div>
-          <strong style="color: var(--text-main);">BANKNIFTY 52000 PE</strong>
-          <div style="font-size: 11px; color: var(--text-muted);">OI Unwinding Alert @ 10:25 AM</div>
+          <strong style="color: var(--text-main);">BANKNIFTY 54200 PE</strong>
+          <div style="font-size: 11px; color: var(--text-muted);">OI Short Covering Alert</div>
         </div>
-        <span style="color: var(--accent-red); font-weight: bold; font-size: 13px;">-12.0% MOVE</span>
+        <span style="color: var(--accent-red); font-weight: bold; font-size: 13px;">-15.2% MOVE</span>
       </div>
     </div>
   </div>
 
   <script>
     const sampleData = [
-      { time: '10:00', open: 24250, high: 24280, low: 24240, close: 24275 },
-      { time: '10:05', open: 24275, high: 24310, low: 24260, close: 24295 },
-      { time: '10:10', open: 24295, high: 24320, low: 24285, close: 24305 },
-      { time: '10:15', open: 24305, high: 24325, low: 24290, close: 24318 },
-      { time: '10:20', open: 24318, high: 24345, low: 24310, close: 24339 },
-      { time: '10:25', open: 24339, high: 24350, low: 24325, close: 24340 },
-      { time: '10:30', open: 24340, high: 24380, low: 24335, close: 24375 },
-      { time: '10:35', open: 24375, high: 24400, low: 24370, close: 24390 },
-      { time: '10:40', open: 24390, high: 24420, low: 24385, close: 24410 }
+      { open: 22680, high: 22710, low: 22670, close: 22705 },
+      { open: 22705, high: 22730, low: 22690, close: 22725 },
+      { open: 22725, high: 22715, low: 22680, close: 22685 },
+      { open: 22685, high: 22700, low: 22675, close: 22695 },
+      { open: 22695, high: 22720, low: 22690, close: 22718 },
+      { open: 22718, high: 22735, low: 22710, close: 22700 },
+      { open: 22700, high: 22710, low: 22675, close: 22680 },
+      { open: 22680, high: 22715, low: 22680, close: 22710 },
+      { open: 22710, high: 22740, low: 22705, close: 22735 }
     ];
 
-    function drawDirectCanvas(container) {
+    function drawChart() {
+      const container = document.getElementById('chart');
+      if (!container) return;
       container.innerHTML = '';
+
       const canvas = document.createElement('canvas');
       container.appendChild(canvas);
 
       const dpr = window.devicePixelRatio || 1;
       const rect = container.getBoundingClientRect();
-      const width = rect.width || container.clientWidth || 320;
-      const height = rect.height || 320;
+      const width = rect.width || 320;
+      const height = rect.height || 300;
 
       canvas.width = width * dpr;
       canvas.height = height * dpr;
@@ -393,7 +395,6 @@
       ctx.scale(dpr, dpr);
 
       const padding = 35;
-
       ctx.fillStyle = '#111a2b';
       ctx.fillRect(0, 0, width, height);
 
@@ -409,7 +410,6 @@
       ctx.strokeStyle = '#1d2a40';
       ctx.fillStyle = '#91a2bd';
       ctx.font = '10px sans-serif';
-      ctx.lineWidth = 1;
 
       for (let i = 0; i <= 4; i++) {
         let y = padding + ((height - padding * 2) / 4) * i;
@@ -442,22 +442,15 @@
 
         ctx.fillStyle = color;
         const bodyTop = Math.min(openY, closeY);
-        const bodyHeight = Math.max(Math.abs(closeY - openY), 4);
-        const bodyWidth = Math.max(step * 0.5, 8);
+        const bodyHeight = Math.max(Math.abs(closeY - openY), 3);
+        const bodyWidth = Math.max(step * 0.5, 6);
         ctx.fillRect(x - bodyWidth / 2, bodyTop, bodyWidth, bodyHeight);
       });
     }
 
-    function init() {
-      const container = document.getElementById('chart');
-      if (!container) return;
-      drawDirectCanvas(container);
-    }
-
-    window.addEventListener('DOMContentLoaded', init);
-    window.addEventListener('load', init);
-    window.addEventListener('resize', init);
-    setTimeout(init, 300);
+    window.addEventListener('DOMContentLoaded', drawChart);
+    window.addEventListener('resize', drawChart);
+    setTimeout(drawChart, 300);
   </script>
 </body>
 </html>
