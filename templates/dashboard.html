@@ -1,240 +1,318 @@
-<!doctype html>
+``html
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>BIG MOVE HUNTER | Live Trading Dashboard</title>
-<script src="https://unpkg.com/lightweight-charts@4.2.2/dist/lightweight-charts.standalone.production.js"></script>
-<style>
-:root {
-color-scheme: dark;
---bg: #080d18;
---card: #111a2b;
---border: #24324a;
---muted: #91a2bd;
---text: #edf4ff;
---green: #28dba0;
---red: #ff647c;
---blue: #62a7ff;
---gold: #ffca70;
-}
-* { box-sizing: border-box; }
-body {
-margin: 0;
-background: radial-gradient(ellipse at top, #14213a 0%, #080d18 48%);
-font-family: system-ui, -apple-system, Segoe UI, sans-serif;
-font-size: 14px;
-color: var(--text);
-min-height: 100vh;
-}
-header {
-position: sticky;
-top: 0;
-z-index: 4;
-background: rgba(8, 13, 24, 0.9);
-border-bottom: 1px solid var(--border);
-padding: 14px 16px;
-display: flex;
-justify-content: space-between;
-align-items: center;
-gap: 10px;
-backdrop-filter: blur(14px);
-}
-h1 { font-size: 17px; margin: 0; letter-spacing: 0.7px; }
-small, .muted { color: var(--muted); }
-.pill {
-border: 1px solid #1f7a61;
-background: #10382f;
-color: #8df5d2;
-border-radius: 999px;
-padding: 5px 9px;
-font-size: 11px;
-}
-.wrap {
-max-width: 1400px;
-margin: auto;
-padding: 14px;
-display: grid;
-gap: 16px;
-grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-}
-.card {
-background: var(--card);
-border: 1px solid var(--border);
-border-radius: 12px;
-padding: 16px;
-display: flex;
-flex-direction: column;
-gap: 12px;
-}
-.card-title {
-font-size: 12px;
-font-weight: 600;
-color: var(--muted);
-text-transform: uppercase;
-letter-spacing: 0.5px;
-}
-.value {
-font-size: 22px;
-font-weight: 700;
-color: var(--text);
-}
-.green { color: var(--green); }
-.gold { color: var(--gold); }
-#chart-box {
-width: 100%;
-height: 380px;
-position: relative;
-background: #111a2b;
-border-radius: 8px;
-overflow: hidden;
-}
-#chart {
-width: 100%;
-height: 100%;
-}
-canvas {
-display: block;
-width: 100%;
-height: 100%;
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BIG MOVE HUNTER | Live Dashboard</title>
+  <style>
+    :root {
+      --bg-dark: #0b111e;
+      --card-bg: #111a2b;
+      --border-color: #1d2a40;
+      --accent-green: #28dba0;
+      --accent-red: #ff647c;
+      --accent-blue: #62a7ff;
+      --accent-gold: #ffca70;
+      --text-main: #edf4ff;
+      --text-muted: #91a2bd;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      padding: 12px;
+      min-height: 100vh;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      margin-bottom: 12px;
+    }
+
+    .logo-title {
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      color: var(--text-main);
+    }
+
+    .badge-live {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(40, 219, 160, 0.15);
+      color: var(--accent-green);
+      border: 1px solid rgba(40, 219, 160, 0.3);
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      background-color: var(--accent-green);
+      border-radius: 50%;
+      animation: blink 1.5s infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 16px;
+    }
+
+    .card-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .card-value {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--accent-green);
+    }
+
+    .card-subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .chart-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 16px;
+    }
+
+    .chart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .chart-container {
+      width: 100%;
+      height: 380px;
+      position: relative;
+    }
+
+    canvas {
+      width: 100% !important;
+      height: 100% !important;
+    }
+
+    .signals-list {
+      margin-top: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .signal-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.02);
+      padding: 10px 14px;
+      border-radius: 8px;
+      border-left: 3px solid var(--accent-green);
+    }
+
+    .signal-item.sell {
+      border-left-color: var(--accent-red);
+    }
+  </style>
 </head>
 <body>
-<header>
-<div>
-<h1>BIG MOVE HUNTER</h1>
-<small>Live Trading & Signal Dashboard</small>
-</div>
-<span class="pill">● LIVE ENGINE</span>
-</header>
-​<div class="wrap">
-<div class="card">
-<div class="card-title">Market Status</div>
-<div class="value green">ACTIVE / BULLISH</div>
-<div class="muted">Scanning top high-volume tickers</div>
-</div>
-​<div class="card">
-<div class="card-title">Big Move Signal</div>
-<div class="value gold">HUNTER READY</div>
-<div class="muted">Monitoring Breakouts & Volume Spikes</div>
-</div>
-​<div class="card" style="grid-column: 1 / -1;">
-<div class="card-title">Live Trend Chart (NIFTY / CRYPTO)</div>
-<div id="chart-box">
-<div id="chart"></div>
-</div>
-</div>
-</div>
-​<script>
-const sampleData = [
-{ time: '10:00', open: 175.2, high: 178.0, low: 174.5, close: 177.8 },
-{ time: '10:05', open: 177.8, high: 180.1, low: 176.9, close: 179.4 },
-{ time: '10:10', open: 179.4, high: 181.5, low: 178.2, close: 180.5 },
-{ time: '10:15', open: 180.5, high: 182.0, low: 179.2, close: 181.8 },
-{ time: '10:20', open: 181.8, high: 184.5, low: 181.0, close: 183.9 },
-{ time: '10:25', open: 183.9, high: 185.2, low: 182.8, close: 184.1 },
-{ time: '10:30', open: 184.1, high: 188.0, low: 183.5, close: 187.5 },
-{ time: '10:35', open: 187.5, high: 191.2, low: 187.0, close: 190.8 },
-{ time: '10:40', open: 190.8, high: 195.0, low: 189.5, close: 194.2 }
-];
-​function drawFallbackCanvas(container) {
-container.innerHTML = '';
-const canvas = document.createElement('canvas');
-container.appendChild(canvas);
-​const dpr = window.devicePixelRatio || 1;
-const rect = container.getBoundingClientRect();
-canvas.width = rect.width * dpr;
-canvas.height = rect.height * dpr;
-​const ctx = canvas.getContext('2d');
-ctx.scale(dpr, dpr);
-​const width = rect.width;
-const height = rect.height;
-const padding = 30;
-​ctx.fillStyle = '#111a2b';
-ctx.fillRect(0, 0, width, height);
-​let minP = Infinity, maxP = -Infinity;
-sampleData.forEach(d => {
-if (d.low < minP) minP = d.low;
-if (d.high > maxP) maxP = d.high;
-});
-​const range = (maxP - minP) || 1;
-const step = (width - padding * 2) / sampleData.length;
-​// Draw Grid
-ctx.strokeStyle = '#1d2a40';
-ctx.lineWidth = 1;
-for (let i = 1; i <= 4; i++) {
-let y = (height / 5) * i;
-ctx.beginPath();
-ctx.moveTo(0, y);
-ctx.lineTo(width, y);
-ctx.stroke();
-}
-​// Draw Candles
-sampleData.forEach((d, i) => {
-const x = padding + i * step + step / 2;
-const getY = price => height - padding - ((price - minP) / range) * (height - padding * 2);
-​const openY = getY(d.open);
-const closeY = getY(d.close);
-const highY = getY(d.high);
-const lowY = getY(d.low);
-​const isUp = d.close >= d.open;
-const color = isUp ? '#28dba0' : '#ff647c';
-​// Wick
-ctx.strokeStyle = color;
-ctx.lineWidth = 1.5;
-ctx.beginPath();
-ctx.moveTo(x, highY);
-ctx.lineTo(x, lowY);
-ctx.stroke();
-​// Body
-ctx.fillStyle = color;
-const bodyTop = Math.min(openY, closeY);
-const bodyHeight = Math.max(Math.abs(closeY - openY), 3);
-const bodyWidth = Math.max(step * 0.5, 6);
-ctx.fillRect(x - bodyWidth / 2, bodyTop, bodyWidth, bodyHeight);
-});
-}
-​function init() {
-const container = document.getElementById('chart');
-if (!container) return;
-​if (typeof LightweightCharts !== 'undefined') {
-try {
-container.innerHTML = '';
-const chart = LightweightCharts.createChart(container, {
-width: container.clientWidth || 300,
-height: 380,
-layout: { background: { type: 'solid', color: '#111a2b' }, textColor: '#91a2bd' },
-grid: { vertLines: { color: '#1d2a40' }, horzLines: { color: '#1d2a40' } },
-timeScale: { timeVisible: true }
-});
-const candleSeries = chart.addCandlestickSeries({
-upColor: '#28dba0', downColor: '#ff647c',
-borderDownColor: '#ff647c', borderUpColor: '#28dba0',
-wickDownColor: '#ff647c', wickUpColor: '#28dba0'
-});
-candleSeries.setData([
-{ time: '2026-10-20', open: 175.20, high: 178.00, low: 174.50, close: 177.80 },
-{ time: '2026-10-21', open: 177.80, high: 180.10, low: 176.90, close: 179.40 },
-{ time: '2026-10-22', open: 179.40, high: 181.50, low: 178.20, close: 180.50 },
-{ time: '2026-10-23', open: 180.50, high: 182.00, low: 179.20, close: 181.80 },
-{ time: '2026-10-24', open: 181.80, high: 184.50, low: 181.00, close: 183.90 },
-{ time: '2026-10-25', open: 183.90, high: 185.20, low: 182.80, close: 184.10 },
-{ time: '2026-10-26', open: 184.10, high: 188.00, low: 183.50, close: 187.50 },
-{ time: '2026-10-27', open: 187.50, high: 191.20, low: 187.00, close: 190.80 },
-{ time: '2026-10-28', open: 190.80, high: 195.00, low: 189.50, close: 194.20 }
-]);
-chart.timeScale().fitContent();
-return;
-} catch (e) {
-console.warn("Falling back to HTML5 Canvas Chart", e);
-}
-}
-drawFallbackCanvas(container);
-}
-​window.addEventListener('DOMContentLoaded', init);
-window.addEventListener('load', init);
-window.addEventListener('resize', init);
-</script>
+
+  <header>
+    <div>
+      <div class="logo-title">BIG MOVE HUNTER</div>
+      <div style="font-size: 11px; color: var(--text-muted);">Live Market Scanner & Dashboard</div>
+    </div>
+    <div class="badge-live">
+      <span class="dot"></span>
+      LIVE ENGINE
+    </div>
+  </header>
+
+  <div class="grid-container">
+    <div class="card">
+      <div class="card-title">Market Trend</div>
+      <div class="card-value" style="color: var(--accent-green);">BULLISH MOMENTUM</div>
+      <div class="card-subtitle">Volume Spikes Detected</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Hunter Alert Signal</div>
+      <div class="card-value" style="color: var(--accent-gold);">HUNTER READY</div>
+      <div class="card-subtitle">Scanning Nifty / Crypto Breakouts</div>
+    </div>
+  </div>
+
+  <div class="chart-card">
+    <div class="chart-header">
+      <div class="card-title" style="margin: 0;">LIVE CANDLESTICK CHART</div>
+      <div style="font-size: 12px; color: var(--accent-blue);">Interval: 5m</div>
+    </div>
+    <div id="chart" class="chart-container"></div>
+  </div>
+
+  <div class="card" style="margin-top: 12px;">
+    <div class="card-title">Recent Big Move Alerts</div>
+    <div class="signals-list">
+      <div class="signal-item">
+        <div>
+          <strong style="color: var(--text-main);">BTC / USDT</strong>
+          <div style="font-size: 11px; color: var(--text-muted);">Bullish Breakout @ 10:40 AM</div>
+        </div>
+        <span style="color: var(--accent-green); font-weight: bold; font-size: 13px;">+3.4% MOVE</span>
+      </div>
+      <div class="signal-item sell">
+        <div>
+          <strong style="color: var(--text-main);">ETH / USDT</strong>
+          <div style="font-size: 11px; color: var(--text-muted);">Volume Breakdown @ 10:25 AM</div>
+        </div>
+        <span style="color: var(--accent-red); font-weight: bold; font-size: 13px;">-1.8% MOVE</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const sampleData = [
+      { time: '10:00', open: 175.2, high: 178.0, low: 174.5, close: 177.8 },
+      { time: '10:05', open: 177.8, high: 180.1, low: 176.9, close: 179.4 },
+      { time: '10:10', open: 179.4, high: 181.5, low: 178.2, close: 180.5 },
+      { time: '10:15', open: 180.5, high: 182.0, low: 179.2, close: 181.8 },
+      { time: '10:20', open: 181.8, high: 184.5, low: 181.0, close: 183.9 },
+      { time: '10:25', open: 183.9, high: 185.2, low: 182.8, close: 184.1 },
+      { time: '10:30', open: 184.1, high: 188.0, low: 183.5, close: 187.5 },
+      { time: '10:35', open: 187.5, high: 191.2, low: 187.0, close: 190.8 },
+      { time: '10:40', open: 190.8, high: 195.0, low: 189.5, close: 194.2 }
+    ];
+
+    function drawDirectCanvas(container) {
+      container.innerHTML = '';
+      const canvas = document.createElement('canvas');
+      container.appendChild(canvas);
+
+      const dpr = window.devicePixelRatio || 1;
+      const rect = container.getBoundingClientRect();
+      const width = rect.width || container.clientWidth || 320;
+      const height = rect.height || 380;
+
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+      canvas.style.width = width + 'px';
+      canvas.style.height = height + 'px';
+
+      const ctx = canvas.getContext('2d');
+      ctx.scale(dpr, dpr);
+
+      const padding = 35;
+
+      // Background
+      ctx.fillStyle = '#111a2b';
+      ctx.fillRect(0, 0, width, height);
+
+      let minP = Infinity, maxP = -Infinity;
+      sampleData.forEach(d => {
+        if (d.low < minP) minP = d.low;
+        if (d.high > maxP) maxP = d.high;
+      });
+
+      const range = (maxP - minP) || 1;
+      const step = (width - padding * 2) / sampleData.length;
+
+      // Grid Lines & Price Labels
+      ctx.strokeStyle = '#1d2a40';
+      ctx.fillStyle = '#91a2bd';
+      ctx.font = '11px sans-serif';
+      ctx.lineWidth = 1;
+
+      for (let i = 0; i <= 4; i++) {
+        let y = padding + ((height - padding * 2) / 4) * i;
+        let priceVal = (maxP - (range / 4) * i).toFixed(1);
+        ctx.beginPath();
+        ctx.moveTo(padding, y);
+        ctx.lineTo(width - 10, y);
+        ctx.stroke();
+        ctx.fillText(priceVal, 5, y + 4);
+      }
+
+      // Draw Candlesticks
+      sampleData.forEach((d, i) => {
+        const x = padding + i * step + step / 2;
+        const getY = price => height - padding - ((price - minP) / range) * (height - padding * 2);
+
+        const openY = getY(d.open);
+        const closeY = getY(d.close);
+        const highY = getY(d.high);
+        const lowY = getY(d.low);
+
+        const isUp = d.close >= d.open;
+        const color = isUp ? '#28dba0' : '#ff647c';
+
+        // Wick
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(x, highY);
+        ctx.lineTo(x, lowY);
+        ctx.stroke();
+
+        // Body
+        ctx.fillStyle = color;
+        const bodyTop = Math.min(openY, closeY);
+        const bodyHeight = Math.max(Math.abs(closeY - openY), 4);
+        const bodyWidth = Math.max(step * 0.5, 8);
+        ctx.fillRect(x - bodyWidth / 2, bodyTop, bodyWidth, bodyHeight);
+      });
+    }
+
+    function init() {
+      const container = document.getElementById('chart');
+      if (!container) return;
+      drawDirectCanvas(container);
+    }
+
+    window.addEventListener('DOMContentLoaded', init);
+    window.addEventListener('load', init);
+    window.addEventListener('resize', init);
+    setTimeout(init, 300);
+  </script>
 </body>
-</html>
+</html
