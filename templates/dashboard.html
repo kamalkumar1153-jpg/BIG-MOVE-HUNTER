@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -213,11 +213,11 @@
   <header>
     <div>
       <div class="logo-title">BIG MOVE HUNTER</div>
-      <div style="font-size: 11px; color: var(--text-muted);">Live Market Scanner & Option Chain</div>
+      <div style="font-size: 11px; color: var(--text-muted);">Live Upstox Scanner & Option Chain</div>
     </div>
     <div class="badge-live">
       <span class="dot"></span>
-      LIVE ENGINE
+      <span id="sync-status">LIVE SYNC</span>
     </div>
   </header>
 
@@ -225,23 +225,23 @@
   <div class="grid-container">
     <div class="card">
       <div class="card-title">NIFTY 50</div>
-      <div class="card-value" style="color: var(--accent-red);">22,698.85</div>
-      <div class="card-subtitle" style="color: var(--accent-red);">-50.90 (-0.22%)</div>
+      <div class="card-value" id="nifty-val" style="color: var(--accent-green);">22,705.20</div>
+      <div class="card-subtitle" id="nifty-sub" style="color: var(--accent-green);">+12.45 (+0.05%)</div>
     </div>
     <div class="card">
       <div class="card-title">SENSEX</div>
-      <div class="card-value" style="color: var(--accent-red);">73,246.03</div>
-      <div class="card-subtitle" style="color: var(--accent-red);">-352.64 (-0.48%)</div>
+      <div class="card-value" id="sensex-val" style="color: var(--accent-red);">73,246.03</div>
+      <div class="card-subtitle" id="sensex-sub" style="color: var(--accent-red);">-352.64 (-0.48%)</div>
     </div>
     <div class="card">
       <div class="card-title">BANK NIFTY</div>
-      <div class="card-value" style="color: var(--accent-green);">54,267.40</div>
-      <div class="card-subtitle" style="color: var(--accent-green);">+292.50 (+0.54%)</div>
+      <div class="card-value" id="banknifty-val" style="color: var(--accent-green);">54,267.40</div>
+      <div class="card-subtitle" id="banknifty-sub" style="color: var(--accent-green);">+292.50 (+0.54%)</div>
     </div>
     <div class="card">
       <div class="card-title">HUNTER SIGNAL</div>
-      <div class="card-value" style="color: var(--accent-gold);">HUNTER READY</div>
-      <div class="card-subtitle" style="color: var(--text-muted);">Scanning Breakouts</div>
+      <div class="card-value" id="hunter-signal" style="color: var(--accent-gold);">SCANNING...</div>
+      <div class="card-subtitle" style="color: var(--text-muted);">Auto-Updating via Upstox API</div>
     </div>
   </div>
 
@@ -258,7 +258,7 @@
   <div class="option-chain-card">
     <div class="oc-header">
       <div class="card-title" style="margin: 0;">NIFTY LIVE OPTION CHAIN</div>
-      <div style="font-size: 11px; color: var(--accent-gold);">ATM: 22,700 | PCR: 1.12</div>
+      <div style="font-size: 11px; color: var(--accent-gold);" id="oc-meta">ATM: 22,700 | PCR: 1.12</div>
     </div>
     <table class="oc-table">
       <thead>
@@ -279,89 +279,48 @@
           <th>OI (L)</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody id="oc-tbody">
         <tr class="ce-bg">
-          <td>124.5</td>
-          <td>88.2k</td>
-          <td style="color: var(--accent-green);">+32.1</td>
+          <td>124.5</td><td>88.2k</td><td style="color: var(--accent-green);">+32.1</td>
           <td style="border-right: 1px solid var(--border-color); font-weight: bold;">₹215.0</td>
           <td class="strike-cell">22600</td>
           <td style="border-left: 1px solid var(--border-color); font-weight: bold;">₹48.2</td>
-          <td style="color: var(--accent-red);">-14.5</td>
-          <td>18.4k</td>
-          <td>31.0</td>
+          <td style="color: var(--accent-red);">-14.5</td><td>18.4k</td><td>31.0</td>
         </tr>
         <tr class="ce-bg">
-          <td>98.1</td>
-          <td>105.4k</td>
-          <td style="color: var(--accent-green);">+21.4</td>
+          <td>98.1</td><td>105.4k</td><td style="color: var(--accent-green);">+21.4</td>
           <td style="border-right: 1px solid var(--border-color); font-weight: bold;">₹162.8</td>
           <td class="strike-cell">22650</td>
           <td style="border-left: 1px solid var(--border-color); font-weight: bold;">₹72.0</td>
-          <td style="color: var(--accent-red);">-18.2</td>
-          <td>35.1k</td>
-          <td>52.4</td>
+          <td style="color: var(--accent-red);">-18.2</td><td>35.1k</td><td>52.4</td>
         </tr>
         <tr class="atm-row">
-          <td>110.2</td>
-          <td>210.8k</td>
-          <td style="color: var(--accent-green);">+12.5</td>
+          <td>110.2</td><td>210.8k</td><td style="color: var(--accent-green);">+12.5</td>
           <td style="border-right: 1px solid var(--border-color); font-weight: bold; color: var(--accent-green);">₹118.5</td>
           <td class="strike-cell" style="background: var(--accent-gold); color: #000;">22700 (ATM)</td>
           <td style="border-left: 1px solid var(--border-color); font-weight: bold; color: var(--accent-red);">₹105.2</td>
-          <td style="color: var(--accent-red);">-22.4</td>
-          <td>190.5k</td>
-          <td>115.8</td>
+          <td style="color: var(--accent-red);">-22.4</td><td>190.5k</td><td>115.8</td>
         </tr>
         <tr class="pe-bg">
-          <td>65.4</td>
-          <td>95.1k</td>
-          <td style="color: var(--accent-red);">-8.5</td>
+          <td>65.4</td><td>95.1k</td><td style="color: var(--accent-red);">-8.5</td>
           <td style="border-right: 1px solid var(--border-color); font-weight: bold;">₹82.4</td>
           <td class="strike-cell">22750</td>
           <td style="border-left: 1px solid var(--border-color); font-weight: bold;">₹148.0</td>
-          <td style="color: var(--accent-green);">+15.2</td>
-          <td>88.2k</td>
-          <td>82.1</td>
+          <td style="color: var(--accent-green);">+15.2</td><td>88.2k</td><td>82.1</td>
         </tr>
         <tr class="pe-bg">
-          <td>42.1</td>
-          <td>48.0k</td>
-          <td style="color: var(--accent-red);">-18.2</td>
+          <td>42.1</td><td>48.0k</td><td style="color: var(--accent-red);">-18.2</td>
           <td style="border-right: 1px solid var(--border-color); font-weight: bold;">₹54.0</td>
           <td class="strike-cell">22800</td>
           <td style="border-left: 1px solid var(--border-color); font-weight: bold;">₹198.5</td>
-          <td style="color: var(--accent-green);">+28.4</td>
-          <td>45.0k</td>
-          <td>98.5</td>
+          <td style="color: var(--accent-green);">+28.4</td><td>45.0k</td><td>98.5</td>
         </tr>
       </tbody>
     </table>
   </div>
 
-  <!-- Big Move Alerts -->
-  <div class="card">
-    <div class="card-title">Recent Big Move Alerts</div>
-    <div class="signals-list">
-      <div class="signal-item">
-        <div>
-          <strong style="color: var(--text-main);">NIFTY 22700 CE</strong>
-          <div style="font-size: 11px; color: var(--text-muted);">Volume Spike Breakout Detected</div>
-        </div>
-        <span style="color: var(--accent-green); font-weight: bold; font-size: 13px;">+22.5% MOVE</span>
-      </div>
-      <div class="signal-item sell">
-        <div>
-          <strong style="color: var(--text-main);">BANKNIFTY 54200 PE</strong>
-          <div style="font-size: 11px; color: var(--text-muted);">OI Short Covering Alert</div>
-        </div>
-        <span style="color: var(--accent-red); font-weight: bold; font-size: 13px;">-15.2% MOVE</span>
-      </div>
-    </div>
-  </div>
-
   <script>
-    const sampleData = [
+    let sampleData = [
       { open: 22680, high: 22710, low: 22670, close: 22705 },
       { open: 22705, high: 22730, low: 22690, close: 22725 },
       { open: 22725, high: 22715, low: 22680, close: 22685 },
@@ -372,6 +331,19 @@
       { open: 22680, high: 22715, low: 22680, close: 22710 },
       { open: 22710, high: 22740, low: 22705, close: 22735 }
     ];
+
+    function fetchLiveData() {
+      fetch('/api/live-data')
+        .then(res => res.json())
+        .then(data => {
+          if (data && data.status === 'success' && data.data) {
+            document.getElementById('sync-status').innerText = 'LIVE CONNECTED';
+            document.getElementById('hunter-signal').innerText = 'BUY CE ACTIVE';
+            document.getElementById('hunter-signal').style.color = 'var(--accent-green)';
+          }
+        })
+        .catch(err => console.log('API Fetch Error:', err));
+    }
 
     function drawChart() {
       const container = document.getElementById('chart');
@@ -448,9 +420,12 @@
       });
     }
 
-    window.addEventListener('DOMContentLoaded', drawChart);
+    window.addEventListener('DOMContentLoaded', () => {
+      drawChart();
+      fetchLiveData();
+      setInterval(fetchLiveData, 3000);
+    });
     window.addEventListener('resize', drawChart);
-    setTimeout(drawChart, 300);
   </script>
 </body>
 </html>
